@@ -1,0 +1,56 @@
+services:
+
+  frontend:
+    image: ${ECR_REGISTRY}/sportzone-frontend:${IMAGE_TAG:-latest}
+    container_name: sportzone-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - sportzone-network
+
+  backend:
+    image: ${ECR_REGISTRY}/sportzone-backend:${IMAGE_TAG:-latest}
+    container_name: sportzone-backend
+    environment:
+      PORT: 5000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+    networks:
+      - sportzone-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: sportzone-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p$${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: always
+    networks:
+      - sportzone-network
+
+networks:
+  sportzone-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

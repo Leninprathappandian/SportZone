@@ -23,7 +23,7 @@ pipeline {
         EC2_SSH_CREDENTIALS = 'ec2-ssh-key'
 
         // Your EC2 public IP or public DNS
-        EC2_HOST = '3.25.122.242'
+        EC2_HOST = '32.236.165.145'
         EC2_USER = 'ubuntu'
 
         DEPLOY_DIR = '/opt/sportzone'

@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const productRoutes = require('./routes/productRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.get('/api/health', (req, res) => {
 
 // Mount Routes
 app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
 
 // Fallback route
 app.use((req, res) => {

@@ -1,6 +1,21 @@
 CREATE DATABASE IF NOT EXISTS sportzone_db;
 USE sportzone_db;
 
+-- User Credentials Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Seed Demo User (Username: demo_athlete | Password: password123)
+INSERT INTO users (username, email, password) VALUES
+('demo_athlete', 'demo@sportzone.com', '$2b$12$zAohND6kqiTPwCKBSC4Q5.enWvMWrhIg2.ahE28NAGkBqeR4X9u36')
+ON DUPLICATE KEY UPDATE id=id;
+
+-- Products Table
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
@@ -13,6 +28,7 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Seed Initial Products
 INSERT INTO products (name, category, price, description, image_url, stock, rating) VALUES
 ('Pro Match Soccer Ball', 'Soccer', 29.99, 'FIFA Quality Pro match ball with thermal bonding technology.', 'https://images.unsplash.com/photo-1614632537423-1e6c2e7e0aab?w=500&auto=format&fit=crop&q=60', 45, 4.8),
 ('Elite Grip Basketball', 'Basketball', 34.99, 'High-tack composite leather designed for both indoor and outdoor courts.', 'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=500&auto=format&fit=crop&q=60', 30, 4.7),

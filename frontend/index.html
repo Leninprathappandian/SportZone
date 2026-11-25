@@ -23,11 +23,22 @@
                 <button id="searchBtn" aria-label="Search">🔍</button>
             </div>
 
-            <button class="cart-trigger" id="cartBtn">
-                <span class="cart-icon">🛒</span>
-                <span class="cart-label">Cart</span>
-                <span class="cart-badge" id="cartCount">0</span>
-            </button>
+            <!-- Auth Profile / Login Button Section -->
+            <div class="nav-actions">
+                <div class="auth-section" id="authSection">
+                    <a href="login.html" class="auth-link-btn" id="loginLink">Sign In</a>
+                    <div class="user-pill hidden" id="userPill">
+                        <span class="user-name" id="userNameLabel">Athlete</span>
+                        <button class="logout-link-btn" id="logoutBtn" title="Logout">Logout</button>
+                    </div>
+                </div>
+
+                <button class="cart-trigger" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-label">Cart</span>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </button>
+            </div>
         </div>
     </header>
 

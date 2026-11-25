@@ -76,6 +76,41 @@ const cartSubtotal = document.getElementById('cartSubtotal');
 const checkoutBtn = document.getElementById('checkoutBtn');
 const toastNotification = document.getElementById('toastNotification');
 
+// Auth DOM Elements
+const loginLink = document.getElementById('loginLink');
+const userPill = document.getElementById('userPill');
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Initialize User Auth Status
+function initAuthStatus() {
+    const userStr = localStorage.getItem('sportzone_user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            loginLink.classList.add('hidden');
+            userPill.classList.remove('hidden');
+            userNameLabel.textContent = `👤 ${user.username}`;
+        } catch (e) {
+            clearAuth();
+        }
+    } else {
+        clearAuth();
+    }
+}
+
+function clearAuth() {
+    loginLink.classList.remove('hidden');
+    userPill.classList.add('hidden');
+}
+
+logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('sportzone_token');
+    localStorage.removeItem('sportzone_user');
+    initAuthStatus();
+    showToast('Logged out successfully.');
+});
+
 // Fetch Products from API (with fallback)
 async function fetchProducts() {
     try {
@@ -86,7 +121,6 @@ async function fetchProducts() {
             products = sampleProducts;
         }
     } catch (err) {
-        // Fallback to sample catalog if running without backend connected
         products = sampleProducts;
     }
     renderProducts();
@@ -241,7 +275,9 @@ checkoutBtn.addEventListener('click', () => {
         alert('Your cart is empty! Add gear before checking out.');
         return;
     }
-    alert('Thank you for choosing SportZone! Your athletic order has been processed successfully.');
+    const user = JSON.parse(localStorage.getItem('sportzone_user'));
+    const buyerName = user ? user.username : 'Guest Athlete';
+    alert(`Thank you, ${buyerName}! Your athletic gear order has been placed successfully.`);
     cart = [];
     saveCart();
     updateCartUI();
@@ -250,4 +286,5 @@ checkoutBtn.addEventListener('click', () => {
 });
 
 // Init
+initAuthStatus();
 fetchProducts();

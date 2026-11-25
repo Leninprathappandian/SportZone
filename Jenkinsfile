@@ -66,37 +66,54 @@ pipeline {
 
         // STAGE 3: Login and push to ECR
         stage('Push Images to ECR') {
-            steps {
-                withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding',
-                     credentialsId: "${AWS_CREDENTIALS}"]
-                ]) {
-                    sh '''
-                        set -e
+    steps {
+        withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding',
+             credentialsId: "${AWS_CREDENTIALS}"]
+        ]) {
+            sh '''
+                set -e
 
-                        aws ecr get-login-password \
-                          --region ${AWS_REGION} |
-                        docker login \
-                          --username AWS \
-                          --password-stdin ${ECR_REGISTRY}
+                # STEP 1: Check AWS identity
+                echo "Checking AWS identity..."
 
-                        docker push \
-                          ${ECR_REGISTRY}/${FRONTEND_REPO}:${BUILD_NUMBER}
+                aws sts get-caller-identity
 
-                        docker push \
-                          ${ECR_REGISTRY}/${FRONTEND_REPO}:latest
+                # STEP 2: Check ECR repositories
+                echo "Checking ECR repositories..."
 
-                        docker push \
-                          ${ECR_REGISTRY}/${BACKEND_REPO}:${BUILD_NUMBER}
+                aws ecr describe-repositories \
+                  --region ${AWS_REGION} \
+                  --repository-names ${FRONTEND_REPO} ${BACKEND_REPO}
 
-                        docker push \
-                          ${ECR_REGISTRY}/${BACKEND_REPO}:latest
+                # STEP 3: Login to ECR
+                echo "Logging into ECR..."
 
-                        docker logout ${ECR_REGISTRY}
-                    '''
-                }
-            }
+                aws ecr get-login-password \
+                  --region ${AWS_REGION} |
+                docker login \
+                  --username AWS \
+                  --password-stdin ${ECR_REGISTRY}
+
+                # STEP 4: Push frontend image
+                docker push \
+                  ${ECR_REGISTRY}/${FRONTEND_REPO}:${BUILD_NUMBER}
+
+                docker push \
+                  ${ECR_REGISTRY}/${FRONTEND_REPO}:latest
+
+                # STEP 5: Push backend image
+                docker push \
+                  ${ECR_REGISTRY}/${BACKEND_REPO}:${BUILD_NUMBER}
+
+                docker push \
+                  ${ECR_REGISTRY}/${BACKEND_REPO}:latest
+
+                docker logout ${ECR_REGISTRY}
+            '''
         }
+    }
+}
 
         // STAGE 4: Copy deployment files to EC2
         stage('Copy Files to EC2') {

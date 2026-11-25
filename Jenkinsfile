@@ -8,26 +8,18 @@ pipeline {
     }
 
     environment {
-        AWS_REGION = 'ap-southeast-2'
+    AWS_REGION = 'ap-southeast-2'
+    AWS_ACCOUNT_ID = '428819150292'
 
-        // Replace with your AWS account ID
-        AWS_ACCOUNT_ID = '428819150292'
+    FRONTEND_REPO = 'sportzone-frontend'
+    BACKEND_REPO  = 'sportzone-backend'
 
-        FRONTEND_REPO = 'sportzone-frontend'
-        BACKEND_REPO  = 'sportzone-backend'
+    ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
-        ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+    AWS_CREDENTIALS = 'aws-ecr-credentials-new'
 
-        // Jenkins credentials IDs
-        AWS_CREDENTIALS = 'aws-ecr-credentials-new'
-        EC2_SSH_CREDENTIALS = 'ec2-ssh-key'
-
-        // Your EC2 public IP or public DNS
-        EC2_HOST = '32.236.165.145'
-        EC2_USER = 'ubuntu'
-
-        DEPLOY_DIR = '/opt/sportzone'
-    }
+    DEPLOY_DIR = '/opt/sportzone'
+}
 
     stages {
 
@@ -115,61 +107,57 @@ pipeline {
     }
 }
 
-        // STAGE 4: Copy deployment files to EC2
-        stage('Copy Files to EC2') {
-            steps {
-                withCredentials([
-                    sshUserPrivateKey(
-                        credentialsId: "${EC2_SSH_CREDENTIALS}",
-                        keyFileVariable: 'SSH_KEY',
-                        usernameVariable: 'SSH_USER'
-                    )
-                ]) {
-                    sh '''
-                        ssh -i "$SSH_KEY" \
-                          -o StrictHostKeyChecking=accept-new \
-                          ${SSH_USER}@${EC2_HOST} \
-                          "sudo mkdir -p ${DEPLOY_DIR}/database &&
-                           sudo chown -R ${SSH_USER}:${SSH_USER} ${DEPLOY_DIR}"
+        stage('Copy Deployment Files') {
+    steps {
+        sh '''
+            set -e
 
-                        scp -i "$SSH_KEY" \
-                          -o StrictHostKeyChecking=accept-new \
-                          docker-compose.yml \
-                          ${SSH_USER}@${EC2_HOST}:${DEPLOY_DIR}/
+            test -f docker-compose.yml
+            test -f database/init.sql
+            test -f ${DEPLOY_DIR}/.env
 
-                        scp -i "$SSH_KEY" \
-                          -o StrictHostKeyChecking=accept-new \
-                          database/init.sql \
-                          ${SSH_USER}@${EC2_HOST}:${DEPLOY_DIR}/database/
-                    '''
-                }
-            }
-        }
-       
-        // STAGE 5: Deploy on EC2
-        stage('Deploy to EC2') {
-            steps {
-                withCredentials([
-                    sshUserPrivateKey(
-                        credentialsId: "${EC2_SSH_CREDENTIALS}",
-                        keyFileVariable: 'SSH_KEY',
-                        usernameVariable: 'SSH_USER'
-                    )
-                ]) {
-                    sh '''
-                        ssh -i "$SSH_KEY" \
-                          -o StrictHostKeyChecking=accept-new \
-                          ${SSH_USER}@${EC2_HOST} \
-                          "cd ${DEPLOY_DIR} &&
-                           aws ecr get-login-password --region ${AWS_REGION} |
-                           sudo docker login --username AWS --password-stdin ${ECR_REGISTRY} &&
-                           sudo env ECR_REGISTRY=${ECR_REGISTRY} IMAGE_TAG=${BUILD_NUMBER} docker compose pull &&
-                           sudo env ECR_REGISTRY=${ECR_REGISTRY} IMAGE_TAG=${BUILD_NUMBER} docker compose up -d --remove-orphans"
-                    '''
-                }
-            }
-        }
+            mkdir -p ${DEPLOY_DIR}/database
+
+            cp docker-compose.yml ${DEPLOY_DIR}/
+            cp database/init.sql ${DEPLOY_DIR}/database/
+
+            echo "Deployment files copied."
+        '''
     }
+}
+
+stage('Pull and Deploy from ECR') {
+    steps {
+        sh '''
+            set -e
+
+            echo "Checking AWS identity..."
+            aws sts get-caller-identity
+
+            echo "Logging into ECR..."
+            aws ecr get-login-password --region ${AWS_REGION} |
+                docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+            cd ${DEPLOY_DIR}
+
+            export ECR_REGISTRY=${ECR_REGISTRY}
+            export IMAGE_TAG=${BUILD_NUMBER}
+
+            echo "Pulling images from ECR..."
+            docker compose pull
+
+            echo "Deploying containers..."
+            docker compose up -d --remove-orphans
+
+            echo "Deployment status:"
+            docker compose ps
+
+            docker logout ${ECR_REGISTRY}
+
+            echo "SportZone deployment completed."
+        '''
+    }
+}
 
     post {
         success {

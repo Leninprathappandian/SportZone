@@ -8,10 +8,10 @@ pipeline {
     }
 
     environment {
-        AWS_REGION = 'ap-southeast-2b'
+        AWS_REGION = 'ap-southeast-2'
 
         // Replace with your AWS account ID
-        AWS_ACCOUNT_ID = '74e82458-d0e1-70ce-ed3c-24d61c33f357'
+        AWS_ACCOUNT_ID = '428819150292'
 
         FRONTEND_REPO = 'sportzone-frontend'
         BACKEND_REPO  = 'sportzone-backend'
@@ -19,7 +19,7 @@ pipeline {
         ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
         // Jenkins credentials IDs
-        AWS_CREDENTIALS = 'aws-ecr-credentials'
+        AWS_CREDENTIALS = 'aws-ecr-credentials-new'
         EC2_SSH_CREDENTIALS = 'ec2-ssh-key'
 
         // Your EC2 public IP or public DNS
@@ -128,26 +128,7 @@ pipeline {
                 }
             }
         }
-       stage('Pull Images and Deploy') {
-    steps {
-        sshagent(credentials: ["${EC2_SSH_CREDENTIALS}"]) {
-            sh """
-                ssh -o StrictHostKeyChecking=accept-new ubuntu@${EC2_HOST} '
-                    aws ecr get-login-password --region ${AWS_REGION} |
-                    sudo docker login --username AWS --password-stdin ${ECR_REGISTRY}
-
-                    cd ${DEPLOY_DIR}
-
-                    sudo env ECR_REGISTRY=${ECR_REGISTRY} IMAGE_TAG=${BUILD_NUMBER} \
-                    docker compose pull
-
-                    sudo env ECR_REGISTRY=${ECR_REGISTRY} IMAGE_TAG=${BUILD_NUMBER} \
-                    docker compose up -d --remove-orphans
-                '
-            """
-        }
-    }
-}
+       
         // STAGE 5: Deploy on EC2
         stage('Deploy to EC2') {
             steps {

@@ -158,6 +158,7 @@ stage('Pull and Deploy from ECR') {
         '''
     }
 }
+    }
 
     post {
         success {

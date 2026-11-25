@@ -3,76 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Access - SportZone</title>
+    <title>SportZone | Athlete Access & Registration</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="auth-page-body">
-    <!-- Navbar -->
-    <header class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="brand-logo">
-                <span class="logo-icon">⚡</span>
-                <span class="logo-text">Sport<span class="highlight">Zone</span></span>
-            </a>
-            <a href="index.html" class="back-link">← Return to Store</a>
-        </div>
-    </header>
+<body class="auth-body">
+    <div class="auth-page-container">
+        <!-- LEFT SECTION: Sports Hero Brand Experience -->
+        <aside class="auth-hero-pane" aria-label="SportZone Brand Overview">
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-pane-content">
+                <!-- Brand Header -->
+                <a href="index.html" class="hero-brand-link" title="Return to SportZone Home">
+                    <span class="hero-brand-icon">⚡</span>
+                    <span class="hero-brand-text">Sport<span class="brand-accent">Zone</span></span>
+                </a>
 
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <!-- Tabs -->
-            <div class="auth-tabs">
-                <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
-                <button class="tab-btn" id="tabRegister" onclick="switchAuthTab('register')">Create Account</button>
+                <!-- Hero Copy -->
+                <div class="hero-main-copy">
+                    <div class="hero-pill-badge">
+                        <span class="pulse-dot"></span>
+                        <span>OFFICIAL ATHLETIC HUB</span>
+                    </div>
+                    
+                    <h1 class="hero-headline">Push Your Limits.<br>Play Without Limits.</h1>
+                    
+                    <p class="hero-subtext">
+                        Discover pro-grade sports equipment, engineered athletic footwear, and high-performance training gear built for competitors who refuse to compromise.
+                    </p>
+
+                    <!-- Feature Highlights -->
+                    <div class="hero-highlights-grid">
+                        <div class="highlight-item">
+                            <div class="highlight-icon-box">🏆</div>
+                            <div class="highlight-text-content">
+                                <h4>Pro-Grade Quality</h4>
+                                <p>Tournament-certified sports gear tested by athletes.</p>
+                            </div>
+                        </div>
+
+                        <div class="highlight-item">
+                            <div class="highlight-icon-box">⚡</div>
+                            <div class="highlight-text-content">
+                                <h4>Peak Performance</h4>
+                                <p>Engineered for maximum speed, agility, and endurance.</p>
+                            </div>
+                        </div>
+
+                        <div class="highlight-item">
+                            <div class="highlight-icon-box">🛡️</div>
+                            <div class="highlight-text-content">
+                                <h4>100% Authentic & Secure</h4>
+                                <p>Encrypted data protection and verified equipment guaranteed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Footer -->
+                <div class="hero-footer-bar">
+                    <p>&copy; 2026 SportZone Inc. Fueling champions across 40+ athletic disciplines.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT SECTION: Authentication Panel -->
+        <main class="auth-form-pane">
+            <div class="auth-top-nav">
+                <a href="index.html" class="back-to-store-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Back to Store</span>
+                </a>
             </div>
 
-            <!-- Status Alerts -->
-            <div id="authAlert" class="auth-alert hidden"></div>
+            <div class="auth-card-container">
+                <div class="auth-card">
+                    <!-- Brand Icon on Mobile/Card Header -->
+                    <div class="card-brand-header">
+                        <div class="card-logo">
+                            <span class="logo-bolt">⚡</span>
+                            <span class="logo-title">Sport<span class="brand-accent">Zone</span></span>
+                        </div>
+                    </div>
 
-            <!-- Login Form -->
-            <form id="loginForm" class="auth-form">
-                <div class="form-header">
-                    <h2>Welcome Athlete</h2>
-                    <p>Enter your credentials stored in the database</p>
-                </div>
-                <div class="form-group">
-                    <label for="loginIdentifier">Email or Username</label>
-                    <input type="text" id="loginIdentifier" required placeholder="athlete@example.com" autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="current-password">
-                </div>
-                <button type="submit" class="submit-btn" id="loginSubmitBtn">Sign In</button>
-                <div class="demo-hint">
-                    <strong>Demo Credential:</strong> <code>demo@sportzone.com</code> / <code>password123</code>
-                </div>
-            </form>
+                    <!-- Tab Switcher (Pill Layout) -->
+                    <div class="auth-tab-switcher" role="tablist" aria-label="Authentication Options">
+                        <button type="button" class="tab-toggle active" id="tabLogin" role="tab" aria-selected="true" aria-controls="loginForm" onclick="switchAuthTab('login')">
+                            Sign In
+                        </button>
+                        <button type="button" class="tab-toggle" id="tabRegister" role="tab" aria-selected="false" aria-controls="registerForm" onclick="switchAuthTab('register')">
+                            Create Account
+                        </button>
+                    </div>
 
-            <!-- Register Form -->
-            <form id="registerForm" class="auth-form hidden">
-                <div class="form-header">
-                    <h2>Join SportZone</h2>
-                    <p>Create an account to track orders and save equipment</p>
+                    <!-- Dynamic Notification Alert -->
+                    <div id="authAlert" class="auth-alert hidden" role="alert" aria-live="polite">
+                        <span class="alert-icon" id="alertIcon"></span>
+                        <span class="alert-message" id="alertText"></span>
+                    </div>
+
+                    <!-- ================= LOGIN FORM ================= -->
+                    <form id="loginForm" class="auth-form-block" novalidate>
+                        <div class="form-title-group">
+                            <h2 class="form-heading">Welcome Back, Athlete!</h2>
+                            <p class="form-subheading">Sign in to continue your SportZone experience.</p>
+                        </div>
+
+                        <!-- Email or Username -->
+                        <div class="input-field-group">
+                            <label for="loginIdentifier">Email or Username</label>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </span>
+                                <input type="text" id="loginIdentifier" class="auth-input" placeholder="e.g. athlete@sportzone.com" required autocomplete="username">
+                            </div>
+                            <span class="field-error-hint" id="loginIdError"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-field-group">
+                            <div class="label-row">
+                                <label for="loginPassword">Password</label>
+                            </div>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="loginPassword" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                                <button type="button" class="password-toggle-btn" id="toggleLoginPassword" aria-label="Toggle password visibility" onclick="togglePasswordVisibility('loginPassword', this)">
+                                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="field-error-hint" id="loginPassError"></span>
+                        </div>
+
+                        <!-- Form Utility Row: Remember Me -->
+                        <div class="form-utility-row">
+                            <label class="custom-checkbox-container">
+                                <input type="checkbox" id="rememberMeCheckbox">
+                                <span class="checkbox-checkmark"></span>
+                                <span class="checkbox-label-text">Remember me on this device</span>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="auth-primary-btn" id="loginSubmitBtn">
+                            <span class="btn-text">Sign In</span>
+                            <span class="btn-spinner hidden" aria-hidden="true"></span>
+                        </button>
+
+                        <div class="form-switch-prompt">
+                            <span>Don't have a SportZone account?</span>
+                            <button type="button" class="switch-link-btn" onclick="switchAuthTab('register')">Create an account</button>
+                        </div>
+                    </form>
+
+                    <!-- ================= REGISTRATION FORM ================= -->
+                    <form id="registerForm" class="auth-form-block hidden" novalidate>
+                        <div class="form-title-group">
+                            <h2 class="form-heading">Join SportZone!</h2>
+                            <p class="form-subheading">Create your account and get ready to perform.</p>
+                        </div>
+
+                        <!-- Username -->
+                        <div class="input-field-group">
+                            <label for="regUsername">Username</label>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </span>
+                                <input type="text" id="regUsername" class="auth-input" placeholder="e.g. jordan_runner" required autocomplete="username">
+                            </div>
+                            <span class="field-error-hint" id="regUsernameError"></span>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="input-field-group">
+                            <label for="regEmail">Email Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                </span>
+                                <input type="email" id="regEmail" class="auth-input" placeholder="e.g. athlete@sportzone.com" required autocomplete="email">
+                            </div>
+                            <span class="field-error-hint" id="regEmailError"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-field-group">
+                            <label for="regPassword">Password</label>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="regPassword" class="auth-input" placeholder="At least 6 characters" required autocomplete="new-password">
+                                <button type="button" class="password-toggle-btn" id="toggleRegPassword" aria-label="Toggle password visibility" onclick="togglePasswordVisibility('regPassword', this)">
+                                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Password Strength Indicator -->
+                            <div class="password-strength-container" id="strengthContainer">
+                                <div class="strength-meter-bars">
+                                    <div class="meter-bar" id="bar1"></div>
+                                    <div class="meter-bar" id="bar2"></div>
+                                    <div class="meter-bar" id="bar3"></div>
+                                    <div class="meter-bar" id="bar4"></div>
+                                </div>
+                                <div class="strength-label-row">
+                                    <span class="strength-caption">Password strength:</span>
+                                    <span class="strength-text" id="strengthText">None</span>
+                                </div>
+                            </div>
+                            <span class="field-error-hint" id="regPasswordError"></span>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="input-field-group">
+                            <label for="regConfirmPassword">Confirm Password</label>
+                            <div class="input-with-icon">
+                                <span class="input-prefix-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="regConfirmPassword" class="auth-input" placeholder="Repeat your password" required autocomplete="new-password">
+                                <button type="button" class="password-toggle-btn" id="toggleRegConfirmPassword" aria-label="Toggle password visibility" onclick="togglePasswordVisibility('regConfirmPassword', this)">
+                                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="field-error-hint" id="regConfirmError"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="auth-primary-btn" id="registerSubmitBtn">
+                            <span class="btn-text">Create Account</span>
+                            <span class="btn-spinner hidden" aria-hidden="true"></span>
+                        </button>
+
+                        <div class="form-switch-prompt">
+                            <span>Already have an account?</span>
+                            <button type="button" class="switch-link-btn" onclick="switchAuthTab('login')">Sign in</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="regUsername">Username</label>
-                    <input type="text" id="regUsername" required placeholder="johndoe_athlete" autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label for="regEmail">Email Address</label>
-                    <input type="email" id="regEmail" required placeholder="you@example.com" autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" required placeholder="At least 6 characters" autocomplete="new-password">
-                </div>
-                <button type="submit" class="submit-btn" id="registerSubmitBtn">Create Account</button>
-            </form>
-        </div>
+            </div>
+        </main>
     </div>
 
     <script src="js/auth.js"></script>
